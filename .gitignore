@@ -1,0 +1,10 @@
+
+# All dotfiles are added on a case by case basis using the git --force command
+# Ex: git add -f .vimrc
+
+# Ignore all files in this folder (Home)
+ *
+ */
+ 
+ 
+ 
