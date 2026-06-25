@@ -9,8 +9,17 @@ This repo is more of a personal reference/backup than a one-command install.
 | File | Description |
 |---|---|
 | `.tmux.conf` | tmux configuration — remapped prefix, pane/window navigation, mouse support, popups, and status bar theming |
+| `.gdbinit` | GDB configuration for embedded/firmware reverse engineering (MIPS, TUI layout, remote debug helper) |
 | `.gitignore` | Ignores everything except files explicitly added with `-f` |
 | `.zshrc` | Zsh shell configuration |
+
+## .gdbinit highlights
+
+- **Intel syntax** for disassembly (instead of GDB's default AT&T syntax)
+- **debuginfod disabled** — avoids GDB reaching out to the network for debug info, useful when working offline or on isolated embedded targets
+- **MIPS architecture** set by default for router use case.
+- **TUI enabled** with `asm` and `regs` layouts active on startup, focus kept on the command window
+- **`connect` custom command**: shortcut for attaching to a remote `gdbserver`/stub.
 
 ## .tmux.conf highlights
 
@@ -29,14 +38,22 @@ Clone the repo, then symlink or copy whichever files you want:
 
 ```bash
 git clone https://github.com/acentauri92/dotfiles.git
-ln -sf ~/dotfiles/.tmux.conf ~/.tmux.conf
 ```
 
-Reload tmux after copying:
+If you do want to use one of these configs, here's how:
+
+```bash
+ln -sf ~/dotfiles/.tmux.conf ~/.tmux.conf
+ln -sf ~/dotfiles/.gdbinit ~/.gdbinit
+```
+
+Reload tmux after copying/linking its config:
 
 ```bash
 tmux source-file ~/.tmux.conf
 ```
+
+`.gdbinit` is picked up automatically the next time GDB starts.
 
 ## Roadmap
 
