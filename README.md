@@ -31,6 +31,11 @@ This repo is more of a personal reference/backup than a one-command install.
 - **Popups**: `prefix + p` for a blank popup, `prefix + f` to pop open [ranger](https://github.com/ranger/ranger) as a file manager
 - **Quick reload**: `prefix + r` re-sources `~/.tmux.conf`
 - **Status bar theme**: light background (white/gray) with the active window highlighted
+- **Claude usage in status bar**: `status-right` shows session/weekly rate-limit % via [tmux-claude-status](https://github.com/long-910/tmux-claude-status) (`claude-usage short`). `prefix + U` toggles percent/cost, `prefix + B` opens the usage dashboard popup.
+  Requires the `claude-usage` binary on `$PATH` — install separately with:
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/long-910/tmux-claude-status/main/install.sh | bash
+  ```
 
 ## Usage
 
