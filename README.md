@@ -12,7 +12,8 @@ This repo is more of a personal reference/backup than a one-command install.
 | `tmux-git-status.sh` | Helper script for `.tmux.conf`'s status bar — prints the current pane's git branch (with a `*` if dirty) |
 | `.gdbinit` | GDB configuration for embedded/firmware reverse engineering (MIPS, TUI layout, remote debug helper) |
 | `.bashrc` | Just the reusable bit — enables [zoxide](https://github.com/ajeetdsouza/zoxide) (`z <partial-name>` to jump to frecent directories) |
-| `.gitignore` | Ignores everything except files explicitly added with `-f` |
+| `ranger/rc.conf` | Just the customizations — `yc` copies the selected file's absolute path to the clipboard |
+| `.gitignore` | Ignores everything except the files explicitly listed as exceptions (or force-added with `git add -f`) |
 | `.zshrc` | Zsh shell configuration |
 
 ## .gdbinit highlights
@@ -30,7 +31,8 @@ This repo is more of a personal reference/backup than a one-command install.
 - **Mouse mode** enabled
 - **Pane navigation without the prefix**: `Alt + arrow keys`
 - **Window navigation without the prefix**: `Shift + Left/Right`
-- **Popups**: `prefix + p` for a blank popup, `prefix + f` to pop open [ranger](https://github.com/ranger/ranger) as a file manager
+- **Popups**: `prefix + p` for a blank popup
+- **File manager**: `prefix + f` opens [ranger](https://github.com/ranger/ranger) in a 40%-height split pane. This deliberately uses `split-window` rather than `display-popup` — popups render as an empty black box on VTE-based terminals such as GNOME Terminal. Note that tmux 3.4 dropped `-p <percent>` in favour of `-l <percent>%`
 - **Quick reload**: `prefix + r` re-sources `~/.tmux.conf`
 - **Status bar theme**: [tmux-power](https://github.com/wfxr/tmux-power) plugin, `everforest` color scheme
 - **Hostname/user hidden**: the default `user@host` segment (`left_a`) is blanked out — just the session name shows on the left
@@ -41,6 +43,14 @@ This repo is more of a personal reference/backup than a one-command install.
   curl -fsSL https://raw.githubusercontent.com/long-910/tmux-claude-status/main/install.sh | bash
   ```
 - **Fast status refresh**: `status-interval` set to 2s, plus hooks that force a refresh on window/pane switch so the git branch segment doesn't show stale info from the previously focused pane
+
+## ranger/rc.conf highlights
+
+ranger loads its own shipped `rc.conf` first and the user's second, so this file holds only the deltas rather than a copy of the 760-line default.
+
+- **`yc` copies the selected file's absolute path to the system clipboard.** ranger's built-in `yy`/`yp` only populate its *internal* register, which is useless for pasting into another application — this hands the path off to the real clipboard instead. Handy for pasting a path into an editor, a chat window, or a CLI prompt.
+- Uses `wl-copy` (Wayland). On X11, swap it for `xclip -selection clipboard`.
+- `readlink -f` is needed because ranger's `%f` is relative to its current directory, so without it you get a bare filename instead of a full path.
 
 ## Usage
 
@@ -62,6 +72,19 @@ ln -sf ~/dotfiles/.gdbinit ~/.gdbinit
 ```bash
 ln -sf ~/dotfiles/tmux-git-status.sh ~/.local/bin/tmux-git-status.sh
 chmod +x ~/.local/bin/tmux-git-status.sh
+```
+
+`ranger/rc.conf` is safe to symlink over the default location, because ranger still loads its shipped defaults first:
+
+```bash
+mkdir -p ~/.config/ranger
+ln -sf ~/dotfiles/ranger/rc.conf ~/.config/ranger/rc.conf
+```
+
+It needs a clipboard tool on `$PATH` — `wl-clipboard` on Wayland, or `xclip` on X11 (edit the binding to match):
+
+```bash
+sudo apt install wl-clipboard   # Wayland
 ```
 
 `.bashrc` here is just the zoxide line — append it to your real `~/.bashrc` (don't symlink over it) rather than replacing your existing shell config:

@@ -10,3 +10,5 @@
 !tmux-git-status.sh
 !.gdbinit
 !.bashrc
+!ranger/
+!ranger/rc.conf
